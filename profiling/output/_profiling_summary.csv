@@ -1,0 +1,8 @@
+table_name,row_count,column_count,columns_with_nulls
+lead_log,8,7,0
+paid_transactions,14,6,0
+referral_rewards,3,4,0
+user_logs,29,8,0
+user_referral_logs,96,5,1
+user_referral_statuses,3,3,0
+user_referrals,46,11,5

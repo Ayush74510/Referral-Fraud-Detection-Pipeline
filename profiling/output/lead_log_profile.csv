@@ -1,0 +1,8 @@
+table_name,column_name,data_type,row_count,null_count,null_percentage,populated_percentage,distinct_value_count,min_value,max_value,max_actual_length,sample_values
+lead_log,id,int64,8,0,0.0,100.0,8,1,8,1,1; 2; 3
+lead_log,lead_id,object,8,0,0.0,100.0,5,08b8ab0371b6a0cb79319628505c446c,c50f607bbae83f7c53551476e11997eb,32,774656feb3119be1d8d6d893429c7cc0; bbd3c7b2448041dc5339b23878cacd79; a90dcb9c1fc9c63f1e2dc7dbd79ecfd2
+lead_log,source_category,object,8,0,0.0,100.0,2,Offline,Online,7,Online; Offline
+lead_log,created_at,object,8,0,0.0,100.0,5,2024-01-31 08:53:22.403000+00:00,2024-05-13 06:38:58.322000+00:00,24,2024-05-13T06:38:58.322Z; 2024-05-10T04:16:27.919Z; 2024-01-31T08:53:22.403Z
+lead_log,preferred_location,object,8,0,0.0,100.0,3,ADITYAWARMAN,GAJAH MADA,12,GAJAH MADA; ADITYAWARMAN; BENHIL
+lead_log,timezone_location,object,8,0,0.0,100.0,1,Asia/Jakarta,Asia/Jakarta,12,Asia/Jakarta
+lead_log,current_status,object,8,0,0.0,100.0,5,Appointment,Warm,11,Fresh; Warm; Deal
