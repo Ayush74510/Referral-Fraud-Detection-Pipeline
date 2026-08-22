@@ -1,6 +1,6 @@
 table_name,column_name,data_type,row_count,null_count,null_percentage,populated_percentage,distinct_value_count,min_value,max_value,max_actual_length,sample_values
-user_referral_logs,id,int64,96,0,0.0,100.0,96,1,96,2,1; 2; 3
-user_referral_logs,user_referral_id,object,96,0,0.0,100.0,78,119330b602a0e3bc0b66487b6c53ec19,ffea2078bee21f79f199256757e5d578,32,433df86639089a01ce358b27aebdf19f; ea4d6702e73d722499c47bbe494214be; 7a03e01e0c17b2322845242a796adb5e
-user_referral_logs,source_transaction_id,object,96,79,82.29,17.71,17,0d5745a60be9f0d9163c99c91fd61efc,de0d476b360046c0d079d5f8fcb77c00,32,aa7f55497ab7a5842145c6c58e1395c2; 3efa130b4bcb9b0675e0c5ac526b1e33; 701ee6fa1925773ad8e13f1f6b7293ae
-user_referral_logs,created_at,object,96,0,0.0,100.0,96,2024-03-08 11:33:50+00:00,2024-07-10 08:51:11+00:00,20,2024-06-02T20:42:09Z; 2024-06-25T07:57:00Z; 2024-04-29T10:25:56Z
+user_referral_logs,id,int64,96,0,0.0,100.0,96,1,96,2,1; 2; 3; 4; 5
+user_referral_logs,user_referral_id,object,96,0,0.0,100.0,78,119330b602a0e3bc0b66487b6c53ec19,ffea2078bee21f79f199256757e5d578,32,433df86639089a01ce358b27aebdf19f; ea4d6702e73d722499c47bbe494214be; 7a03e01e0c17b2322845242a796adb5e; 61717d106753428549731b63554d70a5; 99ad142bc25863b18014cad08a728fb2
+user_referral_logs,source_transaction_id,object,96,79,82.29,17.71,17,0d5745a60be9f0d9163c99c91fd61efc,de0d476b360046c0d079d5f8fcb77c00,32,aa7f55497ab7a5842145c6c58e1395c2; 3efa130b4bcb9b0675e0c5ac526b1e33; 701ee6fa1925773ad8e13f1f6b7293ae; 441dc9d263135dfc7f7cd52b71a91cec; 91273b98dd4ab2ac704baed2329670d2
+user_referral_logs,created_at,object,96,0,0.0,100.0,96,2024-03-08 11:33:50+00:00,2024-07-10 08:51:11+00:00,20,2024-06-02T20:42:09Z; 2024-06-25T07:57:00Z; 2024-04-29T10:25:56Z; 2024-05-13T06:35:37Z; 2024-06-14T11:36:54Z
 user_referral_logs,is_reward_granted,bool,96,0,0.0,100.0,2,False,True,5,False; True
