@@ -1,0 +1,26 @@
+# Springer Capital — Referral Program Fraud Detection Pipeline
+#
+# Lightweight image: the whole pipeline runs on pandas (no PySpark/JVM),
+# so a slim Python base is enough — keeps the build fast and the image small.
+
+FROM python:3.10.20
+
+WORKDIR /app
+
+# Install dependencies first (separate layer from the code copy below) so
+# `docker build` only re-installs packages when requirements.txt actually
+# changes, not on every code edit — much faster iterative builds.
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the rest of the project (code + raw CSVs). See .dockerignore for
+# what's deliberately excluded (old generated output, caches, etc.).
+COPY . .
+
+# data/output is where the report is written — mount this as a volume at
+# `docker run` time (see README.md) so the report persists on the host,
+# per the spec's requirement that "the report should be stored outside
+# the container."
+RUN mkdir -p /app/data/output
+
+CMD ["python", "script.py"]

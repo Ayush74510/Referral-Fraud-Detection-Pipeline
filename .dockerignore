@@ -1,0 +1,21 @@
+# Don't bake stale generated output into the image — the pipeline
+# regenerates these fresh on every run.
+data/output/
+profiling/output/
+
+# Python cruft
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# Version control / editor / OS noise
+.git/
+.gitignore
+.vscode/
+.idea/
+.DS_Store
+
+# Not needed inside the container
+README.md
+*.pdf
