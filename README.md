@@ -1,4 +1,4 @@
-﻿<div align="center">
+<div align="center">
 
 # 🔍 Referral Fraud Detection Pipeline
 
@@ -22,12 +22,12 @@
 - [Project Structure](#-project-structure)
 - [Fraud Detection Rules](#-fraud-detection-rules)
 - [Notable Data Findings](#-notable-data-findings)
-- [Setup & Usage](#️-setup--usage)
+- [Setup & Usage](#%EF%B8%8F-setup--usage)
   - [Docker (Recommended)](#-docker-recommended)
   - [Local (Python venv)](#-local-python-venv)
 - [Data Profiling](#-data-profiling)
 - [Output](#-output)
-- [Tech Stack](#️-tech-stack)
+- [Tech Stack](#%EF%B8%8F-tech-stack)
 
 ---
 
