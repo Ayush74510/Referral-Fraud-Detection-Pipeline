@@ -129,6 +129,47 @@ DEDUPE_USER_LOGS_BY_LATEST_ID = True
 #     prevent a fan-out join; any tie-break (latest by id) is safe.
 DEDUPE_LEAD_LOGS_BY_LATEST_ID = True
 
+# 8. referral_reward_id / num_reward_days is present for only 8 of 46
+#    referrals — never literally 0, only present (a real day count) or
+#    null. So "reward value > 0" (spec's fraud condition wording) and "no
+#    reward value assigned" map directly to notna() / isna() on
+#    num_reward_days — no need to separately check for a zero value.
+
+# 9. "Referrer's membership has not expired" (V1 condition #8) needs a
+#    reference point: expired relative to WHEN? user_logs.membership_expired_date
+#    is date-only (no time). Business interpretation used here: the
+#    referrer's membership must not have been expired AT THE TIME THE
+#    REFERRAL WAS MADE (membership_expired_date >= referral_at's date) —
+#    i.e. were they an active member when they made the referral — not
+#    "is it expired as of today when this pipeline happens to run" (which
+#    would make a rule's validity change every time you rerun the script
+#    on the same historical data, which doesn't make sense for an audit
+#    report). This is a judgment call, documented for reviewers.
+
+# 10. Two "bonus" invalid patterns found during development (see
+#     fraud_rules.py I6/I7), beyond the spec's 5 documented conditions:
+#     - I6: a referral meets EVERY V1 sub-condition except "reward
+#       granted" — confirmed that in this dataset, NO referral has a
+#       matching is_reward_granted=True log entry (the 17 True entries in
+#       user_referral_logs all belong to referral IDs outside this
+#       dataset). This makes V1 unreachable as written for this data, and
+#       surfaces a real signal: reward fully earned per business criteria
+#       but never actually disbursed.
+#     - I7: a referral references a transaction_id that does not exist
+#       anywhere in paid_transactions — an unverifiable transaction claim.
+
+# 11. 4 referrals have a referrer_id that does not match any user_id in
+#     user_logs (orphaned reference — same category of issue as the
+#     lead_logs gap in note #6). Combined with the 13 referrals that have
+#     no referrer_id at all, this means referrer_timezone (and therefore
+#     the localized referral_at/updated_at) is unavailable for 17/46 rows.
+#     report.py's fallback: when local time cannot be computed, fall back
+#     to the raw UTC timestamp rather than leaving it blank — showing a
+#     correct-but-UTC time preserves more information than no time at all.
+#     reward_granted_at is null for ALL 46 rows regardless (see note #10 —
+#     no referral in this dataset has a real granted-reward event), so
+#     no fallback applies there; it is filled as "N/A" in the final report.
+
 # 7. Timestamp localization: paid_transactions.transaction_at has its own
 #    timezone_transaction column and is localized directly. But
 #    user_referrals.referral_at / updated_at, and the derived
