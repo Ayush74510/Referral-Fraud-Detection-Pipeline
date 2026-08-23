@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Referral Fraud Detection — Springer Capital</title>
+  <meta name="description" content="Interactive dashboard for Springer Capital's Referral Fraud Detection Pipeline. Upload CSVs, run the 5-step pipeline, and explore results." />
+  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔍</text></svg>" />
+</head>
+<body>
+
+<!-- Animated background orbs -->
+<div class="bg-orbs" aria-hidden="true">
+  <span></span><span></span><span></span>
+</div>
+
+<div class="app-wrapper">
+
+  <!-- ============================================================
+       HERO HEADER
+       ============================================================ -->
+  <header class="hero">
+    <div class="hero-text">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        Springer Capital · Internship Project
+      </div>
+      <h1>Referral Fraud<br>Detection Pipeline</h1>
+      <p class="hero-sub">
+        Upload 7 raw CSVs, run the 5-step pipeline, and explore the full 46-row
+        audit report with per-condition fraud breakdowns.
+      </p>
+      <div class="hero-meta">
+        <span class="hero-chip">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          9 Fraud Rules
+        </span>
+        <span class="hero-chip">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          7 Source Tables
+        </span>
+        <span class="hero-chip">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          22-Column Report
+        </span>
+      </div>
+    </div>
+    <div class="hero-actions">
+      <button id="btn-download-top" class="btn btn-secondary hidden" onclick="downloadReport()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download CSV
+      </button>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       UPLOAD SECTION
+       ============================================================ -->
+  <section class="section" id="upload-section">
+    <div class="section-header">
+      <h2 class="section-title">
+        <span class="icon icon-blue">📂</span>
+        Upload Source Files
+      </h2>
+      <span id="upload-progress-badge" class="row-count">0 / 7 files</span>
+    </div>
+    <div class="card">
+      <div class="upload-grid" id="upload-grid">
+        <!-- Rendered by JS -->
+      </div>
+      <div class="upload-actions">
+        <button id="btn-run" class="btn btn-primary btn-lg" onclick="runPipeline()" disabled>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Run Pipeline
+        </button>
+        <span class="upload-note">Drag &amp; drop files onto each slot, or click to browse. Missing files will reuse existing ones on disk.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       PIPELINE PROGRESS
+       ============================================================ -->
+  <section class="section" id="progress-section">
+    <div class="section-header">
+      <h2 class="section-title">
+        <span class="icon icon-violet">⚡</span>
+        Pipeline Progress
+      </h2>
+    </div>
+    <div class="card">
+      <div class="pipeline-progress visible" id="pipeline-progress">
+        <div class="pipeline-steps" id="pipeline-steps">
+          <div class="pipeline-step" id="step-0">
+            <div class="step-circle">📥</div>
+            <div class="step-label">Load</div>
+          </div>
+          <div class="pipeline-step" id="step-1">
+            <div class="step-circle">🧹</div>
+            <div class="step-label">Clean</div>
+          </div>
+          <div class="pipeline-step" id="step-2">
+            <div class="step-circle">🔀</div>
+            <div class="step-label">Transform</div>
+          </div>
+          <div class="pipeline-step" id="step-3">
+            <div class="step-circle">🚨</div>
+            <div class="step-label">Fraud Rules</div>
+          </div>
+          <div class="pipeline-step" id="step-4">
+            <div class="step-circle">📊</div>
+            <div class="step-label">Report</div>
+          </div>
+        </div>
+        <div class="pipeline-log" id="pipeline-log">
+          <div class="log-line">Waiting for pipeline to start...</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SUMMARY STATS
+       ============================================================ -->
+  <section class="section hidden" id="stats-section">
+    <div class="section-header">
+      <h2 class="section-title">
+        <span class="icon icon-teal">📈</span>
+        Summary
+      </h2>
+      <span id="elapsed-badge" class="row-count"></span>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card stat-card-total" id="card-total">
+        <div class="stat-icon" style="background:rgba(79,163,227,0.15);">📋</div>
+        <div>
+          <div class="stat-label">Total Referrals</div>
+          <div class="stat-value" id="stat-total">—</div>
+          <div class="stat-sub">processed this run</div>
+        </div>
+      </div>
+      <div class="stat-card stat-card-valid" id="card-valid">
+        <div class="stat-icon" style="background:rgba(56,217,169,0.15);">✅</div>
+        <div>
+          <div class="stat-label">Valid</div>
+          <div class="stat-value" id="stat-valid">—</div>
+          <div class="stat-sub">pass all business rules</div>
+        </div>
+      </div>
+      <div class="stat-card stat-card-invalid" id="card-invalid">
+        <div class="stat-icon" style="background:rgba(248,113,113,0.15);">🚨</div>
+        <div>
+          <div class="stat-label">Invalid / Flagged</div>
+          <div class="stat-value" id="stat-invalid">—</div>
+          <div class="stat-sub">fraud signals detected</div>
+        </div>
+      </div>
+      <div class="stat-card stat-card-rate" id="card-rate">
+        <div class="stat-icon" style="background:rgba(155,135,245,0.15);">🎯</div>
+        <div>
+          <div class="stat-label">Validity Rate</div>
+          <div class="stat-value" id="stat-rate">—</div>
+          <div class="stat-sub">of referrals are clean</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FRAUD CONDITIONS BREAKDOWN
+       ============================================================ -->
+  <section class="section hidden" id="conditions-section">
+    <div class="section-header">
+      <h2 class="section-title">
+        <span class="icon icon-amber">📉</span>
+        Fraud Condition Breakdown
+      </h2>
+    </div>
+    <div class="card">
+      <div class="conditions-chart-wrap" id="conditions-chart">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       REPORT TABLE
+       ============================================================ -->
+  <section class="section hidden" id="table-section">
+    <div class="section-header">
+      <h2 class="section-title">
+        <span class="icon icon-blue">📋</span>
+        Fraud Report
+      </h2>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span id="row-count-badge" class="row-count">— rows</span>
+        <button class="btn btn-success" onclick="downloadReport()" id="btn-download-table">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download CSV
+        </button>
+      </div>
+    </div>
+    <div class="card" style="padding:16px;">
+      <div class="table-controls">
+        <div class="search-wrap">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          <input class="search-input" id="table-search" type="text" placeholder="Search referral ID, name, status…" oninput="filterTable()" />
+        </div>
+        <select class="filter-select" id="filter-validity" onchange="filterTable()">
+          <option value="all">All rows</option>
+          <option value="valid">Valid only</option>
+          <option value="invalid">Invalid only</option>
+        </select>
+        <select class="filter-select" id="filter-status" onchange="filterTable()">
+          <option value="all">All statuses</option>
+          <option value="Berhasil">Berhasil</option>
+          <option value="Menunggu">Menunggu</option>
+          <option value="Tidak Berhasil">Tidak Berhasil</option>
+        </select>
+      </div>
+      <div class="table-wrap">
+        <table id="report-table">
+          <thead id="table-head"></thead>
+          <tbody id="table-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FOOTER
+       ============================================================ -->
+  <footer class="footer">
+    <div class="footer-text">
+      Referral Fraud Detection Pipeline · Springer Capital · 2026
+    </div>
+    <div class="footer-links">
+      <a href="#upload-section">Upload</a>
+      <a href="#stats-section">Stats</a>
+      <a href="#table-section">Report</a>
+    </div>
+  </footer>
+
+</div><!-- end .app-wrapper -->
+
+<!-- Toast container -->
+<div class="toast-container" id="toast-container"></div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
