@@ -31,9 +31,13 @@ from flask_cors import CORS
 # ---------------------------------------------------------------------------
 # Path setup — allow importing src/ from the project root
 # ---------------------------------------------------------------------------
+from pathlib import Path
+import sys
+
 FRONTEND_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = FRONTEND_DIR.parent
-sys.path.insert(0, str(PROJECT_ROOT / "src"))
+
+sys.path.insert(0, str(PROJECT_ROOT))
 
 import src.config
 from src.load import load_all_tables

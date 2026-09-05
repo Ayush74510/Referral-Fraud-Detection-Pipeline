@@ -17,7 +17,7 @@ exist, and can it be read.
 import sys
 from pathlib import Path
 import pandas as pd
-import config
+from src import config
 
 
 def load_all_tables() -> dict[str, pd.DataFrame]:

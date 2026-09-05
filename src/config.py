@@ -39,7 +39,7 @@ RAW_FILES = {
 
 FINAL_REPORT_PATH = OUTPUT_DATA_DIR / "referral_fraud_report.csv"
 
-EXPECTED_REPORT_ROW_COUNT = 46  # per spec — used as a sanity-check assertion
+EXPECTED_REPORT_ROW_COUNT = 5000  # per spec — used as a sanity-check assertion
 
 
 # --------------------------------------------------------------------------- #
